@@ -1,0 +1,160 @@
+SimplyFileUpload
+================
+
+SimplyFileUpload is a plugin providing simplified file upload UI controls together with controller method to actually process file upload.
+
+
+Requirements
+============
+
+Rails version 2.3.*
+
+There needs to be '/images/spinner.gif' present.
+
+Dependencies:
+  ruby_extensions (http://github.com/pjg/ruby_extensions)
+  responds_to_parent (AJAX like file upload) (http://github.com/pjg/responds_to_parent)
+
+
+Installation
+============
+
+git submodule add git://github.com/pjg/simply_file_upload.git vendor/plugins/simply_file_upload
+cp vendor/plugins/simply_file_upload/js/simply_file_upload.js public/javascripts/
+git add public/javascripts/simply_file_upload.js
+git commit -m "Add simply_file_upload plugin as a submodule"
+
+routes.rb
+  # file upload
+  map.file_upload '/panel/wgraj-plik', :controller => 'site', :action => 'file_upload'
+
+site_controller.rb
+  before_filter :editor_role_required, :only => [:file_upload]
+
+  def file_upload
+    process_file_upload
+  end
+
+application.html
+  <%= javascript_include_tag 'simply_file_upload', :defer => 'defer' %>
+  # defer attribute is of course optional
+
+
+Optionally add the following css styles:
+
+/* LAYOUT */
+
+.file_upload_button {
+    padding: 0.4em 1.5em;
+    position: absolute;
+    right: 1.85em;
+    top: 5.5em;
+}
+
+.file_upload_box {
+    display: none;
+    padding: 1.2em 1.5em 1em;
+    position: absolute;
+    width: 23em;
+    z-index: 1;
+}
+
+.file_upload_box h2 {
+    margin: 0 0 1em;
+    padding: 0;
+}
+
+.file_upload_box input[type="file"] {
+    width: 100%;
+}
+
+.file_upload_box .confirmation {
+    margin: 1em 0 0.5em 0;
+}
+
+.file_upload_box .confirmation label {
+    display: inline;
+}
+
+.file_upload_box .buttons {
+    margin: 1em 0 0.8em 0;
+}
+
+.file_upload_box .buttons .upload {
+    margin-right: 0.6em;
+}
+
+.file_upload_box .loading {
+    margin-left: 0.5em;
+    vertical-align: text-top;
+}
+
+.file_upload_box .message {
+    margin: 1em 0 0;
+    padding: 0.5em 1em;
+    min-height: 1em;
+}
+
+#iframe {
+    display: inline;
+    height: 1px;
+    width: 1px;
+}
+
+
+/* TYPOGRAPHY */
+
+.file_upload_button, .file_upload_box h2, .file_upload_box .buttons .upload {
+    font-weight: bold;
+}
+
+.file_upload_box {
+    font-size: 75%;
+}
+
+.file_upload_box .message {
+    line-height: 100%;
+}
+
+
+/* COLORS */
+
+.file_upload_button:hover {
+    cursor: pointer;
+}
+
+.file_upload_box {
+    background: #fffff3;
+    border: 1px solid #ccc;
+}
+
+.file_upload_box h2 {
+    background: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.file_upload_box .message {
+    border: 1px solid transparent;
+}
+
+#iframe {
+    border: none;
+}
+
+
+Usage
+=====
+
+<%= file_upload_form(:title => 'Etykieta produktu (szerokość 250px)', :action => file_upload_path, :directory => '/pictures/products/', :filename => "product#{@wine.product_id}.jpg", :callback => "make_thumbnail FILENAME=pictures/products/product#{@wine.product_id}.jpg TYPE=product") %>
+# Parameters:
+#   title - dialog title
+#   action - file upload route
+#   directory - destination directory to upload the file to (relative to /public/)
+#   filename - if given it will rename the file after uploading to this name (it will also create a timestamped backup copy) [OPTIONAL]
+#   callback - rake task to execute after the file has been uploaded (to create a thumbnail, for example) (rake task must be in the maintenace namespace, like this: rake maintenance:make_thumbnail) [OPTIONAL]
+
+It will generate a single <button> tag called 'Wgraj plik', which will open up an overlay dialogue with file upload controls (js generated, attached to the <body> tag and positioned absolutely via jQuery).
+
+
+
+Copyright (c) 2010 Paweł Gościcki, released under the MIT license
