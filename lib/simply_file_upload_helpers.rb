@@ -80,7 +80,7 @@ module SimplyFileUpload
             if params[:callback].present?
               # allowing system callbacks is a very serious security risk (but we still want them), so we drastically limit allowed characters
               callback = params[:callback].gsub(/[^a-z A-Z0-9=\/\.\_-]/, '')
-              system("rake maintenance:#{callback}")
+              system("cd #{Rails.root} && rake maintenance:#{callback}")
             end
 
             # message for the user
