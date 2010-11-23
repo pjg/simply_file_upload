@@ -34,7 +34,7 @@ module SimplyFileUpload
       if params[:file].present? and params[:file].respond_to?(:size) and params[:file].size != 0
         # there is an actual file being uploaded
         filename = params[:filename].present? ? params[:filename] : params[:file].original_filename.sanitize_as_filename
-        directory = File.join("#{RAILS_ROOT}", "/public/", params[:directory])
+        directory = File.join(Rails.root, '/public/', params[:directory])
         full_path = File.join(directory, filename)
 
         # no directory by that name
@@ -60,7 +60,7 @@ module SimplyFileUpload
         error_msg = 'Błąd: brak pliku do wgrania.'
       end
 
-      # render response in parent frame (parent of the iframe object) (requires responds_to_parent plugin)
+      # render response in parent frame (parent of the iframe object) (requires responds_to_parent plugin: https://github.com/pjg/responds_to_parent)
       responds_to_parent do
         render :update do |page|
 
@@ -86,6 +86,15 @@ module SimplyFileUpload
             # message for the user
             page['.file_upload_box .message'].attr 'class', 'message notice'
             page['.file_upload_box .message'].text 'Plik wgrany pomyślnie.'
+
+
+            # simply_textile_editor integration (https://github.com/pjg/simply_textile_editor)
+            # add the just uploaded file to the 'pictures' list and select the filename of the uploaded file but only if there is a picture insert box on the page
+            page << "
+              if ($('.insert_picture_box #picture_filename').size() > 0 && typeof $.selectNewlyUploadedPicture == 'function') {
+                $.selectNewlyUploadedPicture('#{full_path}')
+              }
+            "
           end
         end
       end
