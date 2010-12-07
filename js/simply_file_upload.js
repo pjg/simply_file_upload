@@ -19,23 +19,27 @@ $(document).ready(function() {
     var form = $('<form class="file_upload_form" action="' + action + '" target="iframe" method="post" enctype="multipart/form-data"></form>')
     var div = $('<div class="file_upload_box"></div>')
 
+    if (AUTH_TOKEN != undefined) {
+      div.append($('<input type="hidden" name="authenticity_token" value="' + AUTH_TOKEN + '" />'))
+    }
+
     if (title != undefined) {
       var h2_title = $('<h2>' + title + '</h2>')
       div.append(h2_title)
     }
 
     if (directory != undefined) {
-      var hidden_directory = $('<input type="hidden" name="directory" value="' + directory + '"></input>')
+      var hidden_directory = $('<input type="hidden" name="directory" value="' + directory + '" />')
       div.append(hidden_directory)
     }
 
     if (filename != undefined) {
-      var hidden_filename = $('<input type="hidden" name="filename" value="' + filename + '"></input>')
+      var hidden_filename = $('<input type="hidden" name="filename" value="' + filename + '" />')
       div.append(hidden_filename)
     }
 
     if (callback != undefined) {
-      var hidden_callback = $('<input type="hidden" name="callback" value="' + callback + '"></input>')
+      var hidden_callback = $('<input type="hidden" name="callback" value="' + callback + '" />')
       div.append(hidden_callback)
     }
 
