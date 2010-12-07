@@ -1,7 +1,7 @@
 SimplyFileUpload
 ================
 
-SimplyFileUpload is a plugin providing simplified file upload UI controls together with controller method to actually process file upload.
+SimplyFileUpload is a plugin providing simplified file upload UI controls together with the controller method to actually process the file upload.
 
 
 Requirements
@@ -32,6 +32,7 @@ site_controller.rb
   before_filter :editor_role_required, :only => [:file_upload]
 
   def file_upload
+    # simply_file_upload plugin
     process_file_upload
   end
 
